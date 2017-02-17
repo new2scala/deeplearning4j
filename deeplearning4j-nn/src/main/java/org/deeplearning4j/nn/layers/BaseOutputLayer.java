@@ -181,6 +181,10 @@ public abstract class BaseOutputLayer<LayerConfT extends org.deeplearning4j.nn.c
         INDArray biasGradView = gradientViews.get(DefaultParamInitializer.BIAS_KEY);
 
         Nd4j.gemm(input,delta,weightGradView,true,false,1.0,0.0);    //Equivalent to:  weightGradView.assign(input.transpose().mmul(delta));
+        // Nd4j.gemm
+        //  Matrix multiply: Implements c = alpha*op(a)*op(b) + beta*c where op(X) means transpose X (or not) depending on setting of arguments transposeA and transposeB.
+        //  Note that matrix c MUST be fortran order, have zero offset and have c.data().length == c.length(). An exception will be thrown otherwise.
+        //  Don't use this unless you know about level 3 blas and NDArray storage orders.
         biasGradView.assign(delta.sum(0));
 
         gradient.gradientForVariable().put(DefaultParamInitializer.WEIGHT_KEY,weightGradView);
